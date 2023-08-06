@@ -1,0 +1,33 @@
+create node table Place (id int64, name string, url string, type string, PRIMARY KEY (id));
+create node table Organisation (id int64, type string, name string, url string, PRIMARY KEY (id));
+create node table TagClass (id int64, name string, url string, PRIMARY KEY (id));
+create node table Tag (id int64, name string, url string, PRIMARY KEY (id));
+
+create node table Person (creationDate TIMESTAMP, deletionDate TIMESTAMP, explicitlyDeleted BOOLEAN, id int64, firstName string, lastName string, gender string, birthday DATE, locationIP string, browserUsed string, PRIMARY KEY (id));
+create node table Forum (creationDate TIMESTAMP, deletionDate TIMESTAMP, explicitlyDeleted BOOLEAN, id int64, title string, PRIMARY KEY (id));
+create node table Post (creationDate TIMESTAMP, deletionDate TIMESTAMP, explicitlyDeleted BOOLEAN, id int64, imageFile string, locationIP string, browserUsed string, language string, content string, length int32, PRIMARY KEY (id));
+create node table Comment (creationDate TIMESTAMP, deletionDate TIMESTAMP, explicitlyDeleted BOOLEAN, id int64, locationIP string, browserUsed string, content string, length int32, PRIMARY KEY (id));
+
+create rel table Place_isPartOf_Place (FROM Place TO Place, MANY_ONE);
+create rel table Organisation_isLocatedIn_Place (FROM Organisation TO Place, MANY_ONE);
+create rel table TagClass_isSubclassOf_TagClass (FROM TagClass TO TagClass, MANY_ONE);
+create rel table Tag_hasType_TagClass (FROM Tag TO TagClass, MANY_ONE);
+create rel table Forum_hasModerator_Person (FROM Forum TO Person, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Forum_hasTag_Tag (FROM Forum TO Tag, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Forum_hasMember_Person (FROM Forum TO Person, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Post_hasTag_Tag (FROM Post TO Tag, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Forum_containerOf_Post (FROM Forum TO Post, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Post_isLocatedIn_Place (FROM Post TO Place, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Post_hasCreator_Person (FROM Post TO Person, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Person_likes_Post (FROM Person TO Post, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Comment_isLocatedIn_Place (FROM Comment TO Place, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Comment_replyOf_Post (FROM Comment TO Post, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Comment_hasCreator_Person (FROM Comment TO Person, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Comment_hasTag_Tag (FROM Comment TO Tag, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Comment_replyOf_Comment (FROM Comment TO Comment, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Person_likes_Comment (FROM Person TO Comment, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Person_workAt_Organisation (FROM Person TO Organisation, creationDate TIMESTAMP, deletionDate TIMESTAMP, workFrom int32, MANY_MANY);
+create rel table Person_studyAt_Organisation (FROM Person TO Organisation, creationDate TIMESTAMP, deletionDate TIMESTAMP, classYear int32, MANY_MANY);
+create rel table Person_isLocatedIn_Place (FROM Person TO Place, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Person_hasInterest_Tag (FROM Person TO Tag, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
+create rel table Person_knows_Person (FROM Person TO Person, explicitlyDeleted BOOLEAN, creationDate TIMESTAMP, deletionDate TIMESTAMP, MANY_MANY);
